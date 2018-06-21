@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_statistics_for_mario/data/stock_info_helper.dart';
 
 const double _kTextAndIconTabHeight = 53.0; // 导航高度
 const double _kMarginBottom = 3.0; // 图标与文字的间隔
