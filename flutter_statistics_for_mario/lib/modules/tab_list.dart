@@ -50,9 +50,12 @@ class _TabListState extends State<TabList> {
 
     List<Stock> list = await provider.getStocks();
 
-    setState(() {
-      stockList.addAll(list);
-      print(stockList);
-    });
+    if(list != null && list.length > 0){
+      setState(() {
+        stockList.addAll(list);
+        print(stockList);
+      });
+    }
+    
   }
 }

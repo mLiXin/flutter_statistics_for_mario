@@ -84,6 +84,7 @@ class _HomePageState extends State<HomePage>
         backgroundColor: AppColor.primaryBlue,
         onPressed: () {
           //  add a new stock
+          Navigator.of(context).pushNamed("/addDetail");
         },
         child: new Icon(Icons.add),
       ),
