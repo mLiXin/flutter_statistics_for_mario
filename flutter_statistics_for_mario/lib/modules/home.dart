@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'tab_list.dart';
 import 'tab_setting.dart';
-import 'package:flutter_statistics_for_mario/views/tab_common.dart';
+import 'package:flutter_statistics_for_mario/views/tab_common_widget.dart';
 import 'package:flutter_statistics_for_mario/common/app_color.dart';
 
 class HomePage extends StatefulWidget {

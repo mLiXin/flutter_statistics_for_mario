@@ -3,6 +3,7 @@ import 'package:flutter_statistics_for_mario/common/app_color.dart';
 import 'package:flutter_statistics_for_mario/data/stock_info_helper.dart';
 import 'package:sqflite/sqflite.dart';
 import 'dart:async';
+import 'package:flutter_statistics_for_mario/views/list_stock_item.dart';
 
 class TabList extends StatefulWidget {
   @override
@@ -22,6 +23,7 @@ class _TabListState extends State<TabList> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      // TODO 可以加一个排序的筛选
       body: new Column(
         children: <Widget>[
           new Expanded(
@@ -54,20 +56,4 @@ class _TabListState extends State<TabList> {
   }
 }
 
-class StockItemView extends StatelessWidget {
-  const StockItemView({
-    Key key,
-    @required this.item,
-  }) : super(key: key);
 
-  final Stock item;
-
-  @override
-  Widget build(BuildContext context) {
-    return new Container(
-      child: new Card(
-        child: new Text(item.name),
-      ),
-    );
-  }
-}

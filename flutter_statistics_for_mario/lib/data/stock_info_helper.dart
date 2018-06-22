@@ -47,21 +47,21 @@ class Stock {
     this.gainAmount,
   );
 
-  Map<String, dynamic> toMap() =><String,dynamic>{
-      columnName: name,
-      columnBuyPrice: buyPrice,
-      columnSellPrice: sellPrice,
-      columnOneHandCount: oneHandCount,
-      columnHandCount: handCount,
-      columnServiceFee: serviceFee,
-      columnGainAmount: gainAmount,
+  Map<String, dynamic> toMap() => <String, dynamic>{
+        columnName: name,
+        columnBuyPrice: buyPrice,
+        columnSellPrice: sellPrice,
+        columnOneHandCount: oneHandCount,
+        columnHandCount: handCount,
+        columnServiceFee: serviceFee,
+        columnGainAmount: gainAmount,
 
-      //feat add
-      columnOneHandRate: oneHandRate,
-      columnOverBought: overBought,
-      columnBiddingPrice: biddingPrice,
-      columnDarkPrice: darkPrice
-    };
+        //feat add
+        columnOneHandRate: oneHandRate,
+        columnOverBought: overBought,
+        columnBiddingPrice: biddingPrice,
+        columnDarkPrice: darkPrice
+      };
 
   Stock.fromMap(Map map) {
     id = map[columnId];
@@ -140,6 +140,10 @@ class StockProvider {
 
   Future<int> delete(int id) async {
     return await db.delete(tableStock, where: "$columnId = ?", whereArgs: [id]);
+  }
+
+  Future<int> deleteAll() async {
+    return await db.delete(tableStock);
   }
 
   Future<int> update(Stock stock) async {
