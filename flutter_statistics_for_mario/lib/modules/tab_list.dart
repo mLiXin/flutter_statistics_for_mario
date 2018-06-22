@@ -10,7 +10,7 @@ class TabList extends StatefulWidget {
 }
 
 class _TabListState extends State<TabList> {
-  List<Stock> stockList;
+  List<Stock> stockList = [];
 
   @override
   void initState() {
@@ -24,29 +24,21 @@ class _TabListState extends State<TabList> {
     return new Scaffold(
       body: new Column(
         children: <Widget>[
-          new Card(
-            child: new Container(
-              height: 200.0,
-              child: new Center(
-                child: new Text("测试用"),
-              ),
-            ),
-            color: AppColor.primaryBlue,
-          ),
           new Expanded(
               child: new ListView.builder(
-                  itemCount: 200,
-                  itemBuilder: (BuildContext context, int index) {}))
+                  itemCount: stockList.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    Stock item = stockList[index];
+                    return new StockItemView(item: item);
+                  }))
         ],
       ),
     );
   }
 
   Future getData() async {
-    String databasePath = await getDatabasesPath();
-
     StockProvider provider = new StockProvider();
-    await provider.open(databasePath);
+    await provider.open();
 
     List<Stock> list = await provider.getStocks();
 
@@ -56,6 +48,26 @@ class _TabListState extends State<TabList> {
         print(stockList);
       });
     }
+
+    provider.close();
     
+  }
+}
+
+class StockItemView extends StatelessWidget {
+  const StockItemView({
+    Key key,
+    @required this.item,
+  }) : super(key: key);
+
+  final Stock item;
+
+  @override
+  Widget build(BuildContext context) {
+    return new Container(
+      child: new Card(
+        child: new Text(item.name),
+      ),
+    );
   }
 }

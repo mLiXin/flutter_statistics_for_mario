@@ -1,6 +1,7 @@
-import 'package:sqflite/sqflite.dart';
-import 'dart:io';
 import 'dart:async';
+
+import 'package:path/path.dart';
+import 'package:sqflite/sqflite.dart';
 
 final String tableStock = "stock_list";
 final String columnId = "_id";
@@ -21,35 +22,32 @@ final String columnDarkPrice = "_dark_price";
 class Stock {
   int id;
   String name;
-  int buyPrice; // 买价 分
-  int sellPrice; // 卖价 分
   int oneHandCount; // 一手多少股
+  int overBought; // 超购倍数
+  int oneHandRate; // 一手中签率
   int handCount; // 中了多少手
+  int buyPrice; // 买价 分
+  int darkPrice; // 暗盘价格 分
+  int biddingPrice; // 竞价盘价格 分
   int serviceFee; // 其他费用 分
+  int sellPrice; // 卖价 分
   int gainAmount; // 总盈利 分
 
-  // feat add
-  int oneHandRate; // 一手中签率
-  int overBought; // 超购倍数
-  int biddingPrice; // 竞价盘价格 分
-  int darkPrice; // 暗盘价格 分
-
   Stock(
-      this.id,
-      this.name,
-      this.buyPrice,
-      this.sellPrice,
-      this.oneHandCount,
-      this.handCount,
-      this.serviceFee,
-      this.gainAmount,
-      this.oneHandRate,
-      this.overBought,
-      this.biddingPrice,
-      this.darkPrice);
+    this.name,
+    this.oneHandCount,
+    this.overBought,
+    this.oneHandRate,
+    this.handCount,
+    this.buyPrice,
+    this.darkPrice,
+    this.biddingPrice,
+    this.serviceFee,
+    this.sellPrice,
+    this.gainAmount,
+  );
 
-  Map toMap() {
-    Map map = {
+  Map<String, dynamic> toMap() =><String,dynamic>{
       columnName: name,
       columnBuyPrice: buyPrice,
       columnSellPrice: sellPrice,
@@ -64,11 +62,6 @@ class Stock {
       columnBiddingPrice: biddingPrice,
       columnDarkPrice: darkPrice
     };
-    if (id != null) {
-      map[columnId] = id;
-    }
-    return map;
-  }
 
   Stock.fromMap(Map map) {
     id = map[columnId];
@@ -91,26 +84,32 @@ class Stock {
 class StockProvider {
   Database db;
 
-  Future open(String path) async {
+  Future open() async {
+    var databasePath = await getDatabasesPath();
+    String path = join(databasePath, "demo.db");
+
+    print("open start");
     db = await openDatabase(path, version: 1,
         onCreate: (Database db, int version) async {
       await db.execute("""
       create table $tableStock (
         $columnId integer primary key autoincrement,
         $columnName text not null,
-        $columnBuyPrice integer,
-        $columnSellPrice integer,
         $columnOneHandCount integer,
-        $columnHandCount integer,
-        $columnServiceFee integer,
-        $columnGainAmount integer,
-        $columnOneHandRate integer,
         $columnOverBought integer,
+        $columnOneHandRate integer,
+        $columnHandCount integer,
+        $columnBuyPrice integer,
+        $columnDarkPrice integer,
         $columnBiddingPrice integer,
-        $columnDarkPrice integer
+        $columnServiceFee integer,
+        $columnSellPrice integer,
+        $columnGainAmount integer
       )
       """);
     });
+
+    print("open over");
   }
 
   Future<Stock> insert(Stock stock) async {
@@ -138,4 +137,15 @@ class StockProvider {
     }
     return null;
   }
+
+  Future<int> delete(int id) async {
+    return await db.delete(tableStock, where: "$columnId = ?", whereArgs: [id]);
+  }
+
+  Future<int> update(Stock stock) async {
+    return await db.update(tableStock, stock.toMap(),
+        where: "$columnId = ?", whereArgs: [stock.id]);
+  }
+
+  Future close() async => db.close();
 }
